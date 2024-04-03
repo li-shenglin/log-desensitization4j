@@ -1,0 +1,33 @@
+log-desensitization:
+  base-logger-package:               # 脱敏包 数组
+    - com.alibaba.cloud.nacos
+  matcher:
+    - type: keyword                  # 匹配器类型 json|regex|keyword
+      keywords:                      # 脱敏字段, 多个字段用,分割
+        - password
+      ignore-case: true              # 忽略大小写 默认true
+      desensitization: mask          # 脱敏类型  hash|mask
+
+    - type: keyword
+      keywords:
+        - "phone:"
+        - tel
+        - secret
+      desensitization: mask(3,4)     # 脱敏类型  hash|mask
+
+    - type: keyword
+      keywords:
+        - email
+      desensitization: mask(@<-3)    # 脱敏类型  hash|mask
+
+    - type: json
+      keywords:
+        - publicKey
+      depth: 1                       # json深度， 最大5
+      desensitization: hash
+
+    - type: regex
+      pattens:
+        - password
+      depth: 1
+      desensitization: hash
