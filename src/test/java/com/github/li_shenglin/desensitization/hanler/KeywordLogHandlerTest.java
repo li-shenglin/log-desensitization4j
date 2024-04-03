@@ -25,4 +25,18 @@ class KeywordLogHandlerTest {
         keywordLogHandler.handler(matchContext);
         assertEquals("xl=xadpwd=******,key=****** xl=xad", new String(matchContext.getResult()));
     }
+
+    @Test
+    void handler1() {
+        String[] keywords = {"pwd", "key"};
+        KeywordLogHandler keywordLogHandler = new KeywordLogHandler(keywords, new Character[]{'6'}, new PositionMask());
+
+        MatchContext matchContext = new MatchContext("pwd=123456,key=123456");
+        keywordLogHandler.handler(matchContext);
+        assertEquals("pwd=*****6,key=*****6", new String(matchContext.getResult()));
+
+        matchContext = new MatchContext("xl=xadpwd=123456,key=123456 xl=xad");
+        keywordLogHandler.handler(matchContext);
+        assertEquals("xl=xadpwd=*****6,key=*****6 xl=xad", new String(matchContext.getResult()));
+    }
 }

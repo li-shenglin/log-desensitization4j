@@ -1,5 +1,7 @@
 package com.github.li_shenglin.desensitization.core;
 
+import java.util.Arrays;
+
 /**
  * 匹配结果上下文
  *
@@ -29,5 +31,12 @@ public class MatchContext {
 
     public void setResult(char[] result) {
         this.result = result;
+    }
+
+    public String refresh() {
+        if (result != null && result.length > 0) {
+            plainText = String.valueOf(result);
+        }
+        return plainText;
     }
 }

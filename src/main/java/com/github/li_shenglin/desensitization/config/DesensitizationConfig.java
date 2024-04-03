@@ -11,6 +11,16 @@ import java.util.List;
 public class DesensitizationConfig {
     private String[] baseLoggerPackage;
 
+    public Integer getMaxLength() {
+        return maxLength;
+    }
+
+    public void setMaxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    private Integer   maxLength;
+
     private List<MatchConfig> matcher;
 
     public String[] getBaseLoggerPackage() {
@@ -28,4 +38,6 @@ public class DesensitizationConfig {
     public void setMatcher(List<MatchConfig> matcher) {
         this.matcher = matcher;
     }
+
+
 }

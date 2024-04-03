@@ -2,6 +2,7 @@ package com.github.li_shenglin.desensitization.core;
 
 import com.github.li_shenglin.desensitization.config.DesensitizationConfig;
 import com.github.li_shenglin.desensitization.config.MatchConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -44,6 +45,11 @@ public interface ConfigReader {
                 DesensitizationConfig config = new DesensitizationConfig();
 
                 config.setBaseLoggerPackage(readStringArr(o.get("base-logger-package")));
+                config.setMaxLength(2048);
+                if(StringUtils.isNumeric((String)o.get("max-length"))) {
+                    config.setMaxLength(Integer.valueOf(o.get("max-length").toString()));
+                }
+
                 List matcherList = (List) o.get("matcher");
                 if (matcherList != null) {
                     List<MatchConfig> collect = new ArrayList<>();
