@@ -25,7 +25,7 @@ log-desensitization:
       keywords:
         - publicKey
       depth: 1                       # json深度， 最大3
-      desensitization: hash
+      desensitization: hash(xasd)    # hash加盐
 
     - type: regex
       pattens:

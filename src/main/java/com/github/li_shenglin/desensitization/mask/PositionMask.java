@@ -1,5 +1,7 @@
 package com.github.li_shenglin.desensitization.mask;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 
 /**
@@ -25,6 +27,7 @@ import java.util.Objects;
  * | PositionMaskConvertor(-3,"@",-2)   |   @ 右边2位掩码，左边3位掩码  其它使用明文     |
  * ----------------------------------------------------------------------------<br/>
  * 备注：字符 @ 都是指第一个
+ *
  * @author shenglin.li  2024/4/2 23:33
  * @version 1.0
  */
@@ -58,6 +61,7 @@ public class PositionMask implements Mask {
     public PositionMask(int positionLeft, String positionChar, int positionRight) {
         this(positionLeft, positionChar, positionRight, '*');
     }
+
     public PositionMask(int positionLeft, String positionChar, int positionRight, char maskChar) {
         Objects.requireNonNull(maskChar);
         this.positionLeft = positionLeft;
@@ -83,7 +87,7 @@ public class PositionMask implements Mask {
             } else if (positionLeft < 0) {
                 if (positionRight > 0) {
                     return mask(plainText, start, end - positionRight);
-                } else if (positionRight < 0){
+                } else if (positionRight < 0) {
                     return mask(mask(plainText, start, -positionLeft),
                             end + positionRight, end);
                 } else {
@@ -92,7 +96,7 @@ public class PositionMask implements Mask {
             } else {
                 if (positionRight > 0) {
                     return mask(plainText, start, end - positionRight);
-                } else if (positionRight == 0){
+                } else if (positionRight == 0) {
                     return mask(plainText, start, end);
                 } else {
                     return mask(plainText, end + positionRight, end);
@@ -112,7 +116,7 @@ public class PositionMask implements Mask {
             mask(plainText, pIndex + positionRight + 1, end);
         }
         if (positionRight < 0) {
-            mask(plainText, pIndex+1, pIndex+1- positionRight);
+            mask(plainText, pIndex + 1, pIndex + 1 - positionRight);
         }
 
         return plainText;
@@ -122,7 +126,7 @@ public class PositionMask implements Mask {
         int last = Math.min(end, arr.length);
         for (int i = start; i < last; i++) {
             int j = 0;
-            for (j = 0; j < c.length() && i+j < arr.length; j++) {
+            for (j = 0; j < c.length() && i + j < arr.length; j++) {
                 if (arr[i + j] != c.charAt(j)) {
                     break;
                 }
@@ -142,8 +146,41 @@ public class PositionMask implements Mask {
         }
         while (start < last) {
             plainText[start] = maskChar;
-            start ++;
+            start++;
         }
         return plainText;
+    }
+
+
+    public static PositionMask build(String symbol) {
+        if ("mask".equals(symbol)) {
+            return new PositionMask();
+        }
+        if (symbol.startsWith("mask(") && symbol.endsWith(")")) {
+            String string = symbol.substring(5, symbol.length() - 1);
+            if (string.contains("<")) {
+                int i = string.indexOf("<");
+                String positionIdx = string.substring(i + 1);
+                if (StringUtils.isNumeric(positionIdx)) {
+                    return new PositionMask(Integer.parseInt(positionIdx), string.substring(0, i));
+                }
+            } else if (string.contains(">")) {
+                int i = string.indexOf(">");
+                String positionIdx = string.substring(i + 1);
+                if (StringUtils.isNumeric(positionIdx)) {
+                    return new PositionMask(string.substring(0, i), Integer.parseInt(positionIdx));
+                }
+
+            } else {
+                String[] args = string.split(",");
+                if (args.length == 1 && StringUtils.isNumeric(args[0])) {
+                    return new PositionMask(Integer.parseInt(args[0]));
+                } else if (args.length == 2 && StringUtils.isNumeric(args[0]) && StringUtils.isNumeric(args[1])) {
+                    return new PositionMask(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+                }
+            }
+
+        }
+        throw new IllegalArgumentException("can`t parse desensitization[Mask]: " + symbol);
     }
 }

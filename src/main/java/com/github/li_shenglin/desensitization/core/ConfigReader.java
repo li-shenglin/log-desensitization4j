@@ -34,7 +34,7 @@ public interface ConfigReader {
             }
         }
 
-        private DesensitizationConfig readConfig(String path) throws IOException {
+        public DesensitizationConfig readConfig(String path) throws IOException {
             Yaml yaml = new Yaml();
             try (InputStream ins = getClass().getResourceAsStream(path)) {
                 if (ins == null) {

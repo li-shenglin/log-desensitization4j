@@ -2,6 +2,8 @@ package com.github.li_shenglin.desensitization.mask;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * hash掩码
@@ -51,5 +53,15 @@ public class HashMask implements Mask {
         } catch (Exception e) {
             return "".toCharArray();
         }
+    }
+
+    public static HashMask build(String symbol) {
+        if ("hash".equals(symbol)) {
+            return new HashMask();
+        }
+        if (symbol.startsWith("hash(") && symbol.endsWith(")")) {
+            return new HashMask(symbol.substring(5, symbol.length() - 1));
+        }
+        throw new IllegalArgumentException("can`t parse desensitization[Hash]: " + symbol);
     }
 }

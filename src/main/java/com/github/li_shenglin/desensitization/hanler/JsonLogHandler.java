@@ -18,18 +18,24 @@ public class JsonLogHandler extends AbsLogHandler {
     protected String[] keywords;
     protected int depth;
 
+    protected final boolean ignoreCase;
     private RegexLogHandler handler;
 
 
     public JsonLogHandler(String[] keywords, Integer depth, Mask maskHandler) {
+        this(keywords, depth, true, maskHandler);
+    }
+
+    public JsonLogHandler(String[] keywords, Integer depth, boolean ignoreCase, Mask maskHandler) {
         super(maskHandler);
         this.keywords = keywords;
         this.depth = Math.min(depth, 5);
+        this.ignoreCase = ignoreCase;
         List<String> list = new ArrayList<>();
         for (String keyword : keywords) {
             list.add(MessageFormat
                     .format("\\\\{1}\"{0}\\\\{1}\":\\s*\\\\{1}\"?(.*?)\\\\{1}\"?[,}]",
-                            keyword, String.format("{0,%d}", this.depth)));
+                            ignoreCase ? keyword.toLowerCase() : keyword, String.format("{0,%d}", this.depth)));
         }
         handler = new RegexLogHandler(list.toArray(new String[0]), maskHandler);
     }
@@ -37,6 +43,10 @@ public class JsonLogHandler extends AbsLogHandler {
 
     @Override
     public void handler(MatchContext context) {
+        if (ignoreCase) {
+            context.setResult(new String(context.getResult()).toLowerCase().toCharArray());
+            context.refresh();
+        }
         handler.handler(context);
     }
 }

@@ -1,5 +1,6 @@
 package com.github.li_shenglin.desensitization.config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,10 @@ import java.util.List;
 public class DesensitizationConfig {
     private String[] baseLoggerPackage;
 
+    private Integer   maxLength;
+
+    private List<MatchConfig> matcher;
+
     public Integer getMaxLength() {
         return maxLength;
     }
@@ -19,11 +24,10 @@ public class DesensitizationConfig {
         this.maxLength = maxLength;
     }
 
-    private Integer   maxLength;
-
-    private List<MatchConfig> matcher;
-
     public String[] getBaseLoggerPackage() {
+        if (baseLoggerPackage == null) {
+            return new String[0];
+        }
         return baseLoggerPackage;
     }
 
@@ -32,6 +36,9 @@ public class DesensitizationConfig {
     }
 
     public List<MatchConfig> getMatcher() {
+        if (matcher == null) {
+            return new ArrayList<>();
+        }
         return matcher;
     }
 

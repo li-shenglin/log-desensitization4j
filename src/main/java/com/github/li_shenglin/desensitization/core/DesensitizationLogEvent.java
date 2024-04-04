@@ -10,11 +10,33 @@ import org.slf4j.helpers.MessageFormatter;
  */
 public class DesensitizationLogEvent {
     private String loggerName;
-    private String message;
-    private Object[] args;
+//    private String message;
+//    private Object[] args;
     private String formatMessage;
 
+//    public String getFormatMessage() {
+//        return MessageFormatter.arrayFormat(message, args).getMessage();
+//    }
+
+
+    public DesensitizationLogEvent(String loggerName, String formatMessage) {
+        this.loggerName = loggerName;
+        this.formatMessage = formatMessage;
+    }
+
+    public String getLoggerName() {
+        return loggerName;
+    }
+
+    public void setLoggerName(String loggerName) {
+        this.loggerName = loggerName;
+    }
+
     public String getFormatMessage() {
-        return MessageFormatter.arrayFormat(message, args).getMessage();
+        return formatMessage;
+    }
+
+    public void setFormatMessage(String formatMessage) {
+        this.formatMessage = formatMessage;
     }
 }

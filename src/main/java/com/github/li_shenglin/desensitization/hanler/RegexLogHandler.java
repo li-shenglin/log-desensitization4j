@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class RegexLogHandler extends AbsLogHandler {
     protected List<Pattern> regex = new ArrayList<>();
 
-    protected RegexLogHandler(String[] pattens, Mask maskHandler) {
+    public RegexLogHandler(String[] pattens, Mask maskHandler) {
         super(maskHandler);
         for (String patten : pattens) {
             regex.add(Pattern.compile(patten));

@@ -14,6 +14,8 @@ public class MatchConfig {
 
     private boolean ignoreCase;
 
+    private Character[] endSymbols;
+
     public String getType() {
         return type;
     }
@@ -60,5 +62,13 @@ public class MatchConfig {
 
     public void setIgnoreCase(boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
+    }
+
+    public Character[] getEndSymbols() {
+        return endSymbols;
+    }
+
+    public void setEndSymbols(Character[] endSymbols) {
+        this.endSymbols = endSymbols;
     }
 }
