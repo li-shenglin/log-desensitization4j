@@ -3,6 +3,7 @@ package com.github.li_shenglin.desensitization.core;
 import com.github.li_shenglin.desensitization.config.DesensitizationConfig;
 import com.github.li_shenglin.desensitization.config.MatchConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 配置读取
@@ -46,7 +48,7 @@ public interface ConfigReader {
 
                 config.setBaseLoggerPackage(readStringArr(o.get("base-logger-package")));
                 config.setMaxLength(2048);
-                if(StringUtils.isNumeric((String)o.get("max-length"))) {
+                if(o.get("max-length") != null && NumberUtils.isCreatable(o.get("max-length").toString())) {
                     config.setMaxLength(Integer.valueOf(o.get("max-length").toString()));
                 }
 
@@ -57,6 +59,8 @@ public interface ConfigReader {
                         Map<String, Object> map = (Map<String, Object>) e;
                         MatchConfig matchConfig = new MatchConfig();
                         matchConfig.setKeywords(readStringArr(map.get("keywords")));
+                        String[] strings = readStringArr(map.get("end-symbols"));
+                        matchConfig.setEndSymbols(String.join("", strings).chars().mapToObj(c -> (char) c).collect(Collectors.toList()).toArray(new Character[0]));
                         matchConfig.setType(map.get("type").toString());
                         matchConfig.setDesensitization(map.get("desensitization").toString());
                         matchConfig.setPattens(readStringArr(map.get("pattens")));
@@ -82,7 +86,7 @@ public interface ConfigReader {
                 }
                 return baseLoggerPackage;
             }
-            return null;
+            return new String[0];
         }
     }
 }

@@ -1,25 +1,26 @@
 log-desensitization:
   base-logger-package:               # 脱敏包 数组
-    - com.alibaba.cloud.nacos
-  max-length: 2048                   # 处理的最长信息长度
+    - com.a
+    - com.b
+  max-length: 50                   # 处理的最长信息长度
   matcher:
     - type: keyword                  # 匹配器类型 json|regex|keyword
       keywords:                      # 脱敏字段, 多个字段用,分割
         - password
       ignore-case: true              # 忽略大小写 默认true
-      desensitization: mask          # 脱敏类型  hash|mask|fixed
+      desensitization: mask          # 脱敏类型  hash|mask
 
     - type: keyword
       keywords:
-        - "phone:"
+        - "phone"
         - tel
-        - secret
-      desensitization: mask(3,4)     # 脱敏类型  hash|mask|fixed
+      desensitization: mask(3,4)     # 脱敏类型  hash|mask
 
     - type: keyword
       keywords:
         - email
-      desensitization: mask(@<-3)    # 脱敏类型  hash|mask|fixed
+        - "email:"
+      desensitization: mask(@<-3)    # 脱敏类型  hash|mask
 
     - type: json
       keywords:

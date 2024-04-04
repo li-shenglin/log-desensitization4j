@@ -1,6 +1,7 @@
 package com.github.li_shenglin.desensitization.mask;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Objects;
 
@@ -161,21 +162,21 @@ public class PositionMask implements Mask {
             if (string.contains("<")) {
                 int i = string.indexOf("<");
                 String positionIdx = string.substring(i + 1);
-                if (StringUtils.isNumeric(positionIdx)) {
+                if (NumberUtils.isCreatable(positionIdx)) {
                     return new PositionMask(Integer.parseInt(positionIdx), string.substring(0, i));
                 }
             } else if (string.contains(">")) {
                 int i = string.indexOf(">");
                 String positionIdx = string.substring(i + 1);
-                if (StringUtils.isNumeric(positionIdx)) {
+                if (NumberUtils.isCreatable(positionIdx)) {
                     return new PositionMask(string.substring(0, i), Integer.parseInt(positionIdx));
                 }
 
             } else {
                 String[] args = string.split(",");
-                if (args.length == 1 && StringUtils.isNumeric(args[0])) {
+                if (args.length == 1 && NumberUtils.isCreatable(args[0])) {
                     return new PositionMask(Integer.parseInt(args[0]));
-                } else if (args.length == 2 && StringUtils.isNumeric(args[0]) && StringUtils.isNumeric(args[1])) {
+                } else if (args.length == 2 && NumberUtils.isCreatable(args[0]) && NumberUtils.isCreatable(args[1])) {
                     return new PositionMask(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
                 }
             }

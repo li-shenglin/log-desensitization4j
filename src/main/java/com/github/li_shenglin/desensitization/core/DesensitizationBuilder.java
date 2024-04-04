@@ -6,11 +6,11 @@ import com.github.li_shenglin.desensitization.hanler.JsonLogHandler;
 import com.github.li_shenglin.desensitization.hanler.KeywordLogHandler;
 import com.github.li_shenglin.desensitization.hanler.LogHandler;
 import com.github.li_shenglin.desensitization.hanler.RegexLogHandler;
+import com.github.li_shenglin.desensitization.mask.FixedMask;
 import com.github.li_shenglin.desensitization.mask.HashMask;
 import com.github.li_shenglin.desensitization.mask.Mask;
 import com.github.li_shenglin.desensitization.mask.PositionMask;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 public class DesensitizationBuilder {
     private DesensitizationBuilder() {}
-    public static DesensitizationFactory build(DesensitizationConfig config) {
+    public static DesensitizationFactory buildDesensitizationFactory(DesensitizationConfig config) {
         String[] baseLoggerPackage = config.getBaseLoggerPackage();
         List<String> baseLoggerPackageList = Arrays.asList(baseLoggerPackage);
         baseLoggerPackageList.sort(Comparator.comparingInt(String::length));
@@ -54,6 +54,8 @@ public class DesensitizationBuilder {
         maskWord = maskWord.trim();
         if(maskWord.startsWith("hash")) {
             return HashMask.build(maskWord);
+        }else if (maskWord.startsWith("fixed")){
+            return FixedMask.build(maskWord);
         }else if (maskWord.startsWith("mask")){
             return PositionMask.build(maskWord);
         } else {
