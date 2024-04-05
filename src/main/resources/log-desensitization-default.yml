@@ -24,11 +24,28 @@ log-desensitization:
         - email
       desensitization: mask(@<-3)    # 脱敏类型  hash|mask|fixed
 
-#    - type: json
-#      keywords:
-#        - publicKey
-#      depth: 1                       # json深度， 最大3
-#      desensitization: hash(xasd)    # hash加盐
+    - type: json
+      keywords:
+        - password
+      depth: 1
+      desensitization: mask
+
+    - type: json
+      keywords:
+        - phone
+        - tel
+        - identity
+        - secret
+        - idcard
+        - cellphone
+        - mobile
+      depth: 1
+      desensitization: mask(1,4)
+
+    - type: json
+      keywords:
+        - email
+      desensitization: mask(@<-3)
 #
 #    - type: regex
 #      pattens:
