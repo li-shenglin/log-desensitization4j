@@ -30,21 +30,21 @@ public class DesensitizationFactory {
         this.handlers = handlers;
     }
 
-    public String desensitization(DesensitizationLogEvent logEvent) {
+    public void desensitization(DesensitizationLogEvent logEvent) {
         if (logEvent == null || logEvent.getLoggerName() == null || logEvent.getFormatMessage() == null) {
-            return null;
+            return;
         }
 
         if (!baseLoggerPackage.isEmpty() && baseLoggerPackage.stream().noneMatch(e -> logEvent.getLoggerName().startsWith(e))) {
-            return logEvent.getFormatMessage();
+            return;
         }
 
         if (logEvent.getFormatMessage().length() > maxLength) {
-            return logEvent.getFormatMessage();
+            return;
         }
         MatchContext matchContext = new MatchContext(logEvent.getFormatMessage());
         handlers.forEach(e -> e.handler(matchContext));
-        return matchContext.refresh();
+        logEvent.setFormatMessage(matchContext.refresh());
     }
 
     public static volatile Function<String, Object> instanceFunc = name -> {

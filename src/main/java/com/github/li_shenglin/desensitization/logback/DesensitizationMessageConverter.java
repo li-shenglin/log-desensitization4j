@@ -13,6 +13,8 @@ import com.github.li_shenglin.desensitization.core.DesensitizationLogEvent;
 public class DesensitizationMessageConverter extends MessageConverter {
     @Override
     public String convert(ILoggingEvent event) {
-        return DesensitizationFactory.getInstance().desensitization(new DesensitizationLogEvent(event.getLoggerName(), event.getFormattedMessage()));
+        DesensitizationLogEvent logEvent = new DesensitizationLogEvent(event.getLoggerName(), event.getFormattedMessage());
+        DesensitizationFactory.getInstance().desensitization(logEvent);
+        return logEvent.getFormatMessage();
     }
 }
