@@ -2,8 +2,6 @@ package com.github.li_shenglin.desensitization.mask;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * hash掩码
