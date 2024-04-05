@@ -51,6 +51,6 @@ public class DesensitizationTest {
 
         event = new DesensitizationLogEvent("com.a", log2);
         factory.desensitization(event);
-        assertEquals(event.getFormatMessage(), "password=******,secret=1****6,tel=1****6,phone:8d969e,email=123***@qq.com,publickey=123456,password=******,secret=1****6,tel=1****6,phone:8d969e,email=123***@qq.com,publickey=123456");
+        assertEquals(event.getFormatMessage(), "password=******,secret=1****6,tel=1****6,phone:8d969e,email=123***@qq.com,publicKey=123456,password=******,secret=1****6,tel=1****6,phone:8d969e,email=123***@qq.com,publicKey=123456");
     }
 }
