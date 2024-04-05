@@ -14,13 +14,25 @@ class JsonLogHandlerTest {
 
     @Test
     void handler1() {
-        String text = "entity={\"next\":{\"next\":{\"next\":{\"next\":{\"number\": 123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"}";
+        String text = "entity={\"next\":{\"next\":{\"next\":{\"next\":{\"nuMber\": 123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"}";
 
         JsonLogHandler handler = new JsonLogHandler(new String[]{"number", "pwd"}, 1, new PositionMask());
         MatchContext context = new MatchContext(text);
         handler.handler(context);
 
-        assertEquals("entity={\"next\":{\"next\":{\"next\":{\"next\":{\"number\": ******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"}",
+        assertEquals("entity={\"next\":{\"next\":{\"next\":{\"next\":{\"nuMber\": ******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"}",
+                context.refresh());
+    }
+
+    @Test
+    void handler2() {
+        String text = "entity={\"next\":{\"next\":{\"next\":{\"next\":{\"nuMber\": 123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"},\"number\":123456,\"r\":true,\"pwd\":\"abcde\"}";
+
+        JsonLogHandler handler = new JsonLogHandler(new String[]{"number", "pwd"}, 2, false, new PositionMask());
+        MatchContext context = new MatchContext(text);
+        handler.handler(context);
+
+        assertEquals("entity={\"next\":{\"next\":{\"next\":{\"next\":{\"nuMber\": 123456,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"},\"number\":******,\"r\":true,\"pwd\":\"*****\"}",
                 context.refresh());
     }
 

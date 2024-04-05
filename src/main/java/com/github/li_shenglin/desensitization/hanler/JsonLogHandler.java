@@ -6,7 +6,11 @@ import org.slf4j.helpers.MessageFormatter;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * JSON 格式日志处理  正则匹配， 不做严格处理
@@ -29,13 +33,20 @@ public class JsonLogHandler extends AbsLogHandler {
     public JsonLogHandler(String[] keywords, Integer depth, boolean ignoreCase, Mask maskHandler) {
         super(maskHandler);
         this.keywords = keywords;
-        this.depth = Math.min(depth, 5);
+        this.depth = Math.min(depth, 3);
         this.ignoreCase = ignoreCase;
         List<String> list = new ArrayList<>();
         for (String keyword : keywords) {
+            if (ignoreCase) {
+                keyword = keyword.toLowerCase()
+                        .chars()
+                        .mapToObj(c -> String.format("[%s%s]", (char)c, Character.toUpperCase((char)c)))
+                        .collect(Collectors.joining());
+            }
             list.add(MessageFormat
                     .format("\\\\{1}\"{0}\\\\{1}\":\\s*\\\\{1}\"?(.*?)\\\\{1}\"?[,}]",
-                            ignoreCase ? keyword.toLowerCase() : keyword, String.format("{0,%d}", this.depth)));
+                            keyword,
+                            String.format("{0,%d}", this.depth <= 1 ? 0 : this.depth == 2 ? 1 : 3)));
         }
         handler = new RegexLogHandler(list.toArray(new String[0]), maskHandler);
     }
@@ -43,10 +54,6 @@ public class JsonLogHandler extends AbsLogHandler {
 
     @Override
     public void handler(MatchContext context) {
-        if (ignoreCase) {
-            context.setResult(new String(context.getResult()).toLowerCase().toCharArray());
-            context.refresh();
-        }
         handler.handler(context);
     }
 }
