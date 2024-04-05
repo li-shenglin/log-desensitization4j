@@ -26,14 +26,17 @@ public class DesensitizationTest {
 
         DesensitizationFactory factory = DesensitizationFactory.buildDesensitizationFactory(desensitizationConfig);
 
-        String result = factory.desensitization(new DesensitizationLogEvent("com.test1", log1));
-        assertEquals(result, log1);
+        DesensitizationLogEvent event = new DesensitizationLogEvent("com.test1", log1);
+        factory.desensitization(event);
+        assertEquals(event.getFormatMessage(), log1);
 
-        result = factory.desensitization(new DesensitizationLogEvent("com.a", log1));
-        assertEquals(result, "password=******,secret=123***7890");
+        event = new DesensitizationLogEvent("com.a", log1);
+        factory.desensitization(event);
+        assertEquals(event.getFormatMessage(), "password=******,secret=123***7890");
 
-        result = factory.desensitization(new DesensitizationLogEvent("com.a", log2));
-        assertEquals(result, log2);
+        event = new DesensitizationLogEvent("com.a", log2);
+        factory.desensitization(event);
+        assertEquals(event.getFormatMessage(), log2);
     }
 
     @Test
@@ -42,10 +45,12 @@ public class DesensitizationTest {
 
         DesensitizationFactory factory = DesensitizationFactory.buildDesensitizationFactory(desensitizationConfig);
 
-        String result = factory.desensitization(new DesensitizationLogEvent("com.test1", log1));
-        assertEquals("password=******,secret=1********0", result);
+        DesensitizationLogEvent event = new DesensitizationLogEvent("com.test1", log1);
+        factory.desensitization(event);
+        assertEquals("password=******,secret=1********0", event.getFormatMessage());
 
-        result = factory.desensitization(new DesensitizationLogEvent("com.a", log2));
-        assertEquals(result, "password=******,secret=1****6,tel=1****6,phone:8d969e,email=123***@qq.com,publickey=123456,password=******,secret=1****6,tel=1****6,phone:8d969e,email=123***@qq.com,publickey=123456");
+        event = new DesensitizationLogEvent("com.a", log2);
+        factory.desensitization(event);
+        assertEquals(event.getFormatMessage(), "password=******,secret=1****6,tel=1****6,phone:8d969e,email=123***@qq.com,publickey=123456,password=******,secret=1****6,tel=1****6,phone:8d969e,email=123***@qq.com,publickey=123456");
     }
 }

@@ -13,6 +13,7 @@ log-desensitization:
     - type: keyword
       keywords:
         - "phone"
+        - secret
         - tel
       desensitization: mask(3,4)     # 脱敏类型  hash|mask
 
