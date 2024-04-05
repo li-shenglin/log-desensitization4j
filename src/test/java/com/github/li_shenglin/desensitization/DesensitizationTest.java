@@ -2,7 +2,6 @@ package com.github.li_shenglin.desensitization;
 
 import com.github.li_shenglin.desensitization.config.DesensitizationConfig;
 import com.github.li_shenglin.desensitization.core.ConfigReader;
-import com.github.li_shenglin.desensitization.core.DesensitizationBuilder;
 import com.github.li_shenglin.desensitization.core.DesensitizationFactory;
 import com.github.li_shenglin.desensitization.core.DesensitizationLogEvent;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ public class DesensitizationTest {
     void handler1() throws IOException {
         DesensitizationConfig desensitizationConfig = reader.readConfig("/log-desensitization-test.yml");
 
-        DesensitizationFactory factory = DesensitizationBuilder.buildDesensitizationFactory(desensitizationConfig);
+        DesensitizationFactory factory = DesensitizationFactory.buildDesensitizationFactory(desensitizationConfig);
 
         String result = factory.desensitization(new DesensitizationLogEvent("com.test1", log1));
         assertEquals(result, log1);
@@ -41,7 +40,7 @@ public class DesensitizationTest {
     void handler2() throws IOException {
         DesensitizationConfig desensitizationConfig = reader.readConfig("/log-desensitization-test1.yml");
 
-        DesensitizationFactory factory = DesensitizationBuilder.buildDesensitizationFactory(desensitizationConfig);
+        DesensitizationFactory factory = DesensitizationFactory.buildDesensitizationFactory(desensitizationConfig);
 
         String result = factory.desensitization(new DesensitizationLogEvent("com.test1", log1));
         assertEquals("password=******,secret=1********0", result);

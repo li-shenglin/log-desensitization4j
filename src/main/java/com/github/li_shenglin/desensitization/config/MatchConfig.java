@@ -12,6 +12,8 @@ public class MatchConfig {
     private Integer depth;
     private String desensitization;
 
+    private String className;
+
     private boolean ignoreCase;
 
     private Character[] endSymbols;
@@ -70,5 +72,14 @@ public class MatchConfig {
 
     public void setEndSymbols(Character[] endSymbols) {
         this.endSymbols = endSymbols;
+    }
+
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

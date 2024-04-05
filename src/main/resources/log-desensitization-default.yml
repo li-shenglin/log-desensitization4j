@@ -1,6 +1,5 @@
 log-desensitization:
   base-logger-package:               # 脱敏包 数组
-    - com.alibaba.cloud.nacos
   max-length: 2048                   # 处理的最长信息长度
   matcher:
     - type: keyword                  # 匹配器类型 json|regex|keyword
