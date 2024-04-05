@@ -3,10 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.li-shenglin</groupId>
     <artifactId>log-desensitization4j</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>log desensitization for java</name>
     <url>https://github.com/li-shenglin/log-desensitization4j</url>
+    <description>log desensitization for java</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -129,7 +130,7 @@
                 <version>1.5</version>
                 <configuration>
                     <executable>${env.GPG_EXE}</executable>
-                    <keyname>${env.GPG_KEYNAME}</keyname>
+                    <keyname>${project.groupId}</keyname>
                 </configuration>
                 <executions>
                     <execution>
