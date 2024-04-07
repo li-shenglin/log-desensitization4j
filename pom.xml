@@ -20,7 +20,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <spring-boot.version>2.6.7</spring-boot.version>
         <spring-cloud.version>3.1.1</spring-cloud.version>
-        <skip.publishing>false</skip.publishing>
+        <skip.publishing>deploy</skip.publishing>
     </properties>
 
     <dependencies>
@@ -98,10 +98,18 @@
                 <version>0.4.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <skipPublishing>${skip.publishing}</skipPublishing>
                     <publishingServerId>${env.PUBLISHING_SERVER_ID}</publishingServerId>
                     <tokenAuth>true</tokenAuth>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>central-publish</id>
+                        <phase>${skip.publishing}</phase>
+                        <goals>
+                            <goal>publish</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
