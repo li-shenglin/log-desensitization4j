@@ -9,12 +9,12 @@ public class MatchConfig {
 
     private String[] keywords;
     private String[] pattens;
-    private Integer depth;
-    private String desensitization;
+    private Integer depth = 1;
+    private String desensitization = "mask";
 
     private String className;
 
-    private boolean ignoreCase;
+    private boolean ignoreCase = true;
 
     private Character[] endSymbols;
 

@@ -2,11 +2,12 @@ log-desensitization:
   base-logger-package:               # 脱敏包 数组
     - com.a
     - com.b
-  max-length: 50                   # 处理的最长信息长度
+  max-length: 100                   # 处理的最长信息长度
   matcher:
-    - type: keyword                  # 匹配器类型 json|regex|keyword
+    - type: keyword,json                  # 匹配器类型 json|regex|keyword
       keywords:                      # 脱敏字段, 多个字段用,分割
         - password
+      depth: 2
       ignore-case: true              # 忽略大小写 默认true
       desensitization: mask          # 脱敏类型  hash|mask
 

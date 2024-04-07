@@ -4,14 +4,15 @@ import io.github.li_shenglin.desensitization.config.DesensitizationConfig;
 import io.github.li_shenglin.desensitization.config.MatchConfig;
 import io.github.li_shenglin.desensitization.hanler.*;
 import io.github.li_shenglin.desensitization.mask.*;
-import io.github.li_shenglin.desensitization.hanler.*;
-import io.github.li_shenglin.desensitization.mask.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 脱敏工厂 组合组件 对外服务
@@ -22,17 +23,17 @@ import java.util.stream.Collectors;
 public class DesensitizationFactory {
     private List<String> baseLoggerPackage;
 
-    private Integer   maxLength;
+    private Integer maxLength;
 
     private List<LogHandler> handlers;
 
-    public DesensitizationFactory(List<String> baseLoggerPackage, Integer maxLength, List<LogHandler> handlers) {
+    private DesensitizationFactory(List<String> baseLoggerPackage, Integer maxLength, List<LogHandler> handlers) {
         this.baseLoggerPackage = baseLoggerPackage;
         this.maxLength = maxLength;
         this.handlers = handlers;
     }
 
-    public void desensitization(DesensitizationLogEvent logEvent) {
+    private void doDesensitization(DesensitizationLogEvent logEvent) {
         if (logEvent == null || logEvent.getLoggerName() == null || logEvent.getFormatMessage() == null) {
             return;
         }
@@ -49,7 +50,7 @@ public class DesensitizationFactory {
         logEvent.setFormatMessage(matchContext.refresh());
     }
 
-    public static volatile Function<String, Object> instanceFunc = name -> {
+    private static volatile Function<String, Object> instanceFunc = name -> {
         try {
             Class<?> aClass = Class.forName(name);
             return aClass.newInstance();
@@ -67,22 +68,38 @@ public class DesensitizationFactory {
         if (instance == null) {
             synchronized (DesensitizationFactory.class) {
                 if (instance == null) {
-                    instance = buildDesensitizationFactory(reader.getConfig());
+                    try {
+                        instance = buildDesensitizationFactory(reader.getConfig());
+                    } catch (Exception e) {
+                        System.out.println("DesensitizationFactory init error: " + e.getMessage());
+                    }
                 }
             }
         }
         return instance;
     }
     public static synchronized void reload() {
-         instance = null;
+        synchronized (DesensitizationFactory.class) {
+            try {
+                instance = buildDesensitizationFactory(reader.getConfig());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public static void setReader(ConfigReader reader) {
         DesensitizationFactory.reader = reader;
     }
+
     public static void setInstanceFunc(Function<String, Object> func) {
         DesensitizationFactory.instanceFunc = func;
     }
+
+    public static void desensitization(DesensitizationLogEvent logEvent) {
+        Optional.ofNullable(getInstance()).ifPresent(ins -> ins.doDesensitization(logEvent));
+    }
+
     public static DesensitizationFactory buildDesensitizationFactory(DesensitizationConfig config) {
         String[] baseLoggerPackage = config.getBaseLoggerPackage();
         List<String> baseLoggerPackageList = Arrays.asList(baseLoggerPackage);
@@ -90,13 +107,13 @@ public class DesensitizationFactory {
 
         List<LogHandler> handlerList = config.getMatcher()
                 .stream()
-                .map(DesensitizationFactory::buildLogHandler)
+                .flatMap(e -> Stream.of(e.getType().split(",")).map(type -> buildLogHandler(type, e)))
                 .collect(Collectors.toList());
         return new DesensitizationFactory(baseLoggerPackageList, config.getMaxLength(), handlerList);
     }
 
-    private static LogHandler buildLogHandler(MatchConfig config) {
-        switch (config.getType().trim()) {
+    private static LogHandler buildLogHandler(String type, MatchConfig config) {
+        switch (type.trim()) {
             case "json":
                 return new JsonLogHandler(config.getKeywords(), config.getDepth(), config.isIgnoreCase(), buildMask(config.getDesensitization()));
             case "regex":
@@ -110,20 +127,20 @@ public class DesensitizationFactory {
                 }
                 throw new IllegalArgumentException("class " + config.getClassName() + " isn`t a LogHandler");
             default:
-                throw new IllegalArgumentException("unknown type: " + config.getType());
+                throw new IllegalArgumentException("unknown type: " + type);
         }
 
     }
 
     private static Mask buildMask(String maskWord) {
         maskWord = maskWord.trim();
-        if(maskWord.startsWith("hash")) {
+        if (maskWord.startsWith("hash")) {
             return HashMask.build(maskWord);
-        }else if (maskWord.startsWith("fixed")){
+        } else if (maskWord.startsWith("fixed")) {
             return FixedMask.build(maskWord);
-        }else if (maskWord.startsWith("mask")){
+        } else if (maskWord.startsWith("mask")) {
             return PositionMask.build(maskWord);
-        }else if (maskWord.startsWith("custom")){
+        } else if (maskWord.startsWith("custom")) {
             if (maskWord.startsWith("custom(") && maskWord.endsWith(")")) {
                 String className = maskWord.substring(7, maskWord.length() - 1);
                 Object o = instanceFunc.apply(className);

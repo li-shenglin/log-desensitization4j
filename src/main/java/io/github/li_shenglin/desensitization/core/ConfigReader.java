@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  */
 public interface ConfigReader {
-    DesensitizationConfig getConfig();
+    DesensitizationConfig getConfig() throws IOException;
 
     class DefaultConfigReader implements ConfigReader {
         @Override

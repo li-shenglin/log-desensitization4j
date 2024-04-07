@@ -1,6 +1,5 @@
 package io.github.li_shenglin.desensitization.core;
 
-import org.slf4j.helpers.MessageFormatter;
 
 /**
  * 日志事件

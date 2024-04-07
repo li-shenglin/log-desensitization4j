@@ -2,13 +2,13 @@ log-desensitization:
   base-logger-package:               # 脱敏包 数组
   max-length: 2048                   # 处理的最长信息长度
   matcher:
-    - type: keyword                  # 匹配器类型 json|regex|keyword
+    - type: keyword,json                  # 匹配器类型 json|regex|keyword
       keywords:                      # 脱敏字段, 多个字段用,分割
         - password
       ignore-case: true              # 忽略大小写 默认true
       desensitization: mask          # 脱敏类型  hash|mask|fixed
 
-    - type: keyword
+    - type: keyword,json
       keywords:
         - phone
         - tel
@@ -23,24 +23,6 @@ log-desensitization:
       keywords:
         - email
       desensitization: mask(@<-3)    # 脱敏类型  hash|mask|fixed
-
-    - type: json
-      keywords:
-        - password
-      depth: 1
-      desensitization: mask
-
-    - type: json
-      keywords:
-        - phone
-        - tel
-        - identity
-        - secret
-        - idcard
-        - cellphone
-        - mobile
-      depth: 1
-      desensitization: mask(1,4)
 
     - type: json
       keywords:
