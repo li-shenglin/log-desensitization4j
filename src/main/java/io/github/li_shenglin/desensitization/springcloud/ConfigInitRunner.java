@@ -28,5 +28,6 @@ public class ConfigInitRunner implements CommandLineRunner  {
                 throw new RuntimeException(e);
             }
         });
+        DesensitizationFactory.reload();
     }
 }
