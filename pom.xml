@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.li-shenglin</groupId>
     <artifactId>log-desensitization4j</artifactId>
-    <version>0.3</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
     <name>log desensitization for java</name>
     <url>https://github.com/li-shenglin/log-desensitization4j</url>

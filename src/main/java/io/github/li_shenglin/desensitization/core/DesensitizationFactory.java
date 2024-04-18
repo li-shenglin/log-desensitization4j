@@ -116,6 +116,8 @@ public class DesensitizationFactory {
         switch (type.trim()) {
             case "json":
                 return new JsonLogHandler(config.getKeywords(), config.getDepth(), config.isIgnoreCase(), buildMask(config.getDesensitization()));
+            case "array":
+                return new ArrLogHandler(config.getKeywords(), config.getDepth(), config.isIgnoreCase(), buildMask(config.getDesensitization()));
             case "regex":
                 return new RegexLogHandler(config.getPattens(), buildMask(config.getDesensitization()));
             case "keyword":

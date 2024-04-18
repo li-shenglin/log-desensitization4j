@@ -2,7 +2,7 @@ log-desensitization:
   base-logger-package:               # 脱敏包 数组
   max-length: 2048                   # 处理的最长信息长度
   matcher:
-    - type: keyword,json                  # 匹配器类型 json|regex|keyword
+    - type: keyword,json                  # 匹配器类型 json|regex|keyword|array|custom
       keywords:                      # 脱敏字段, 多个字段用,分割
         - password
       ignore-case: true              # 忽略大小写 默认true
