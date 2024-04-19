@@ -15,7 +15,7 @@ class ArrLogHandlerTest {
 
     @Test
     void handler() {
-        String text = "{\"addresses\":[\"0x8fedde00233031f4fb9a06f68ab083a20ee0588d\",\"0x8fedde00233031f4fb9a06f68ab083a20ee0588d\"]}";
+        String text = "{\"addresses\":[\"asdasa\",\"asdasdasdsasd\"]}";
 
         ArrLogHandler handler = new ArrLogHandler(new String[]{"addresses"}, 3, new FixedMask("*"));
         MatchContext context = new MatchContext(text);
